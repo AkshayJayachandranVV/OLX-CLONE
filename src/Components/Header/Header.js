@@ -1,12 +1,29 @@
-import React from 'react';
-
+import React,{useContext} from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Header.css';
 import OlxLogo from '../../assets/OlxLogo';
 import Search from '../../assets/Search';
 import Arrow from '../../assets/Arrow';
 import SellButton from '../../assets/SellButton';
 import SellButtonPlus from '../../assets/SellButtonPlus';
+import { AuthContext, FirebaseContext } from '../../store/Context';
+import { getAuth, signOut } from "firebase/auth";
 function Header() {
+  const {user}=useContext(AuthContext)
+  const navigate=useNavigate()
+  console.log(user+" 66666666666666666666666666666666666666")
+  const {firebase}=useContext(FirebaseContext)
+
+  const signout =()=>{
+    console.log("hyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
+    const auth = getAuth();
+    signOut(auth).then(() => {
+      navigate('/login')
+      // Sign-out successful.
+  }).catch((error) => {
+      // An error happened.
+  });
+  }
   return (
     <div className="headerParentDiv">
       <div className="headerChildDiv">
@@ -34,15 +51,15 @@ function Header() {
           <Arrow></Arrow>
         </div>
         <div className="loginPage">
-          <span>Login</span>
+         <span>{user? user.email :<span onClick={()=>navigate("/login")} >Login</span>}</span>
           <hr />
         </div>
-
+         {user && <span onClick={signout} >Logout</span> }
         <div className="sellMenu">
-          <SellButton></SellButton>
+          <SellButton  ></SellButton>
           <div className="sellMenuContent">
             <SellButtonPlus></SellButtonPlus>
-            <span>SELL</span>
+            <span onClick={()=>navigate("/create")} >SELL</span>
           </div>
         </div>
       </div>
